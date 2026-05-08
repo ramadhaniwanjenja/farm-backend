@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Farm Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1628; --bg2:#0f1f3a; --card:rgba(15,31,58,0.7); --border:rgba(74,158,255,0.2);
+  --text:#e0eeff; --dim:#8aa8c8; --accent:#4a9eff; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:linear-gradient(135deg,#050d1a 0%,#0a1628 50%,#0f1f3a 100%);min-height:100vh;color:var(--text);font-family:'Inter',sans-serif;padding:20px}
+.wrap{max-width:1200px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;border-bottom:1px solid var(--border);padding-bottom:20px}
+h1{font-size:1.5rem;letter-spacing:0.05em;color:var(--accent)}
+.sub{font-size:0.7rem;color:var(--dim);margin-top:2px}
+.status{display:flex;gap:8px;align-items:center;font-size:0.75rem;color:var(--dim)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;backdrop-filter:blur(10px)}
+.label{font-size:0.7rem;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.value{font-size:2.5rem;font-weight:700;color:#fff;line-height:1}
+.unit{font-size:1rem;color:var(--dim);margin-left:4px}
+.bar{height:6px;background:rgba(74,158,255,0.15);border-radius:3px;margin-top:14px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#22c55e);transition:width 1s ease}
+.pump-card{grid-column:span 2;display:flex;align-items:center;gap:24px}
+.pump-icon{font-size:3rem}
+.pump-info{flex:1}
+.pump-title{font-size:1.1rem;font-weight:600;margin-bottom:6px}
+.pump-state{font-size:0.85rem;color:var(--dim)}
+.toggle{width:64px;height:34px;background:#2a3a5a;border-radius:17px;position:relative;cursor:pointer;transition:background 0.3s;border:none}
+.toggle.on{background:var(--good)}
+.toggle::after{content:'';position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;top:4px;left:4px;transition:left 0.3s}
+.toggle.on::after{left:34px}
+.alert{margin-top:10px;padding:6px 12px;border-radius:6px;font-size:0.75rem;display:inline-block}
+.alert.good{background:rgba(34,197,94,0.15);color:var(--good)}
+.alert.warn{background:rgba(245,158,11,0.15);color:var(--warn)}
+.alert.bad{background:rgba(239,68,68,0.15);color:var(--bad)}
+.history{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:24px}
+.history h3{font-size:0.8rem;letter-spacing:0.15em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:0.85rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
+th{color:var(--dim);font-weight:500;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em}
+@media(max-width:600px){.pump-card{grid-column:span 1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>🌱 SMART FARM DASHBOARD</h1>
+      <div class="sub">Real-time monitoring · Auto irrigation · Manual pest control</div>
+    </div>
+    <div class="status"><div class="dot"></div><span id="last-update">Connecting...</span></div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div class="label">🌡 Temperature</div>
+      <div class="value" id="temp">--<span class="unit">°C</span></div>
+      <div class="bar"><div class="bar-fill" id="temp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="label">💧 Humidity</div>
+      <div class="value" id="hum">--<span class="unit">%</span></div>
+      <div class="bar"><div class="bar-fill" id="hum-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="label">🧪 pH Level</div>
+      <div class="value" id="ph">--</div>
+      <div class="alert good" id="ph-alert">Optimal range</div>
+    </div>
+    <div class="card">
+      <div class="label">🌾 Soil Moisture</div>
+      <div class="value" id="soil">--<span class="unit">%</span></div>
+      <div class="alert" id="soil-alert">--</div>
+    </div>
+
+    <div class="card pump-card">
+      <div class="pump-icon">💦</div>
+      <div class="pump-info">
+        <div class="pump-title">Irrigation Pump (Auto)</div>
+        <div class="pump-state" id="irr-state">Activates when soil dry</div>
+      </div>
+      <div class="alert" id="irr-badge">OFF</div>
+    </div>
+
+    <div class="card pump-card">
+      <div class="pump-icon">🧴</div>
+      <div class="pump-info">
+        <div class="pump-title">Pesticide Pump (Manual)</div>
+        <div class="pump-state" id="pst-state">Toggle to spray</div>
+      </div>
+      <button class="toggle" id="pst-toggle" onclick="togglePesticide()"></button>
+    </div>
+  </div>
+
+  <div class="history">
+    <h3>📊 Recent Readings</h3>
+    <table>
+      <thead><tr><th>Time</th><th>Temp</th><th>Humidity</th><th>pH</th><th>Soil</th><th>Pumps</th></tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ⚠ CHANGE THIS to your deployed Render URL after Step 5
+const API_BASE = 'http://localhost:3000';
+const DEVICE_ID = 'farm-node-001';
+
+let pesticideOn = false;
+
+async function fetchData() {
+  try {
+    const res = await fetch(`${API_BASE}/api/iot/readings?deviceId=${DEVICE_ID}`);
+    const data = await res.json();
+    if (!data.latest) {
+      document.getElementById('last-update').textContent = 'Waiting for first reading...';
+      return;
+    }
+    const r = data.latest;
+
+    document.getElementById('temp').innerHTML = r.temperature.toFixed(1) + '<span class="unit">°C</span>';
+    document.getElementById('temp-bar').style.width = Math.min(r.temperature * 2, 100) + '%';
+    document.getElementById('hum').innerHTML = r.humidity.toFixed(0) + '<span class="unit">%</span>';
+    document.getElementById('hum-bar').style.width = r.humidity + '%';
+
+    document.getElementById('ph').textContent = r.pH.toFixed(2);
+    const phAlert = document.getElementById('ph-alert');
+    if (r.pH < 5.5) { phAlert.className = 'alert bad'; phAlert.textContent = 'Too acidic'; }
+    else if (r.pH > 7.5) { phAlert.className = 'alert warn'; phAlert.textContent = 'Too alkaline'; }
+    else { phAlert.className = 'alert good'; phAlert.textContent = 'Optimal range'; }
+
+    document.getElementById('soil').innerHTML = r.soilMoisture + '<span class="unit">%</span>';
+    const soilAlert = document.getElementById('soil-alert');
+    if (r.soilMoisture < 40) { soilAlert.className = 'alert bad'; soilAlert.textContent = '⚠ DRY — Needs water'; }
+    else { soilAlert.className = 'alert good'; soilAlert.textContent = '✓ Adequately moist'; }
+
+    const irrBadge = document.getElementById('irr-badge');
+    irrBadge.textContent = r.irrigationActive ? '● ACTIVE' : 'OFF';
+    irrBadge.className = 'alert ' + (r.irrigationActive ? 'good' : '');
+
+    pesticideOn = r.pesticideActive;
+    document.getElementById('pst-toggle').className = pesticideOn ? 'toggle on' : 'toggle';
+    document.getElementById('pst-state').textContent = pesticideOn ? 'Currently spraying' : 'Toggle to spray';
+
+    document.getElementById('last-update').textContent = 'Updated ' + new Date(r.receivedAt).toLocaleTimeString();
+
+    // History table
+    const tbody = document.getElementById('history-body');
+    tbody.innerHTML = '';
+    data.readings.slice(-8).reverse().forEach(x => {
+      const time = new Date(x.receivedAt).toLocaleTimeString();
+      tbody.innerHTML += `<tr>
+        <td>${time}</td>
+        <td>${x.temperature.toFixed(1)}°C</td>
+        <td>${x.humidity.toFixed(0)}%</td>
+        <td>${x.pH.toFixed(2)}</td>
+        <td>${x.soilMoisture}%</td>
+        <td>${x.irrigationActive?'💧':''}${x.pesticideActive?'🧴':''}</td>
+      </tr>`;
+    });
+  } catch (e) {
+    document.getElementById('last-update').textContent = '⚠ Connection error';
+  }
+}
+
+async function togglePesticide() {
+  pesticideOn = !pesticideOn;
+  document.getElementById('pst-toggle').className = pesticideOn ? 'toggle on' : 'toggle';
+  try {
+    await fetch(`${API_BASE}/api/iot/pump-control`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ deviceId: DEVICE_ID, pesticidePump: pesticideOn })
+    });
+  } catch (e) { alert('Failed to send command'); }
+}
+
+fetchData();
+setInterval(fetchData, 5000);
+</script>
+</body>
+</html>
