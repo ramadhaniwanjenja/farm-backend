@@ -3,117 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smart Farm Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>SMART HARVEST — IoT-Powered School Gardens</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a1628; --bg2:#0f1f3a; --card:rgba(15,31,58,0.7); --border:rgba(74,158,255,0.2);
-  --text:#e0eeff; --dim:#8aa8c8; --accent:#4a9eff; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+  --bg:#020a1a; --bg2:#071a35; --card:rgba(10,30,60,0.6); --border:rgba(74,158,255,0.18);
+  --text:#e0eeff; --dim:#7a9bc0; --accent:#3b9eff; --accent2:#00d4ff;
+  --good:#22c55e; --warn:#f59e0b; --bad:#ef4444; --rain:#60a5fa; --sun:#fbbf24;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:linear-gradient(135deg,#050d1a 0%,#0a1628 50%,#0f1f3a 100%);min-height:100vh;color:var(--text);font-family:'Inter',sans-serif;padding:20px}
-.wrap{max-width:1200px;margin:0 auto}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;border-bottom:1px solid var(--border);padding-bottom:20px}
-h1{font-size:1.5rem;letter-spacing:0.05em;color:var(--accent)}
-.sub{font-size:0.7rem;color:var(--dim);margin-top:2px}
-.status{display:flex;gap:8px;align-items:center;font-size:0.75rem;color:var(--dim)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;backdrop-filter:blur(10px)}
-.label{font-size:0.7rem;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
-.value{font-size:2.5rem;font-weight:700;color:#fff;line-height:1}
-.unit{font-size:1rem;color:var(--dim);margin-left:4px}
-.bar{height:6px;background:rgba(74,158,255,0.15);border-radius:3px;margin-top:14px;overflow:hidden}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),#22c55e);transition:width 1s ease}
-.pump-card{grid-column:span 2;display:flex;align-items:center;gap:24px}
-.pump-icon{font-size:3rem}
-.pump-info{flex:1}
-.pump-title{font-size:1.1rem;font-weight:600;margin-bottom:6px}
-.pump-state{font-size:0.85rem;color:var(--dim)}
-.toggle{width:64px;height:34px;background:#2a3a5a;border-radius:17px;position:relative;cursor:pointer;transition:background 0.3s;border:none}
-.toggle.on{background:var(--good)}
-.toggle::after{content:'';position:absolute;width:26px;height:26px;border-radius:50%;background:#fff;top:4px;left:4px;transition:left 0.3s}
-.toggle.on::after{left:34px}
-.alert{margin-top:10px;padding:6px 12px;border-radius:6px;font-size:0.75rem;display:inline-block}
-.alert.good{background:rgba(34,197,94,0.15);color:var(--good)}
-.alert.warn{background:rgba(245,158,11,0.15);color:var(--warn)}
-.alert.bad{background:rgba(239,68,68,0.15);color:var(--bad)}
-.history{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:24px}
-.history h3{font-size:0.8rem;letter-spacing:0.15em;color:var(--dim);text-transform:uppercase;margin-bottom:14px}
-table{width:100%;border-collapse:collapse;font-size:0.85rem}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border)}
-th{color:var(--dim);font-weight:500;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em}
-@media(max-width:600px){.pump-card{grid-column:span 1}}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:linear-gradient(135deg,#020a1a 0%,#04132a 50%,#071a35 100%);
+  min-height:100vh;color:var(--text);
+  font-family:'Inter',sans-serif;padding:24px;
+  background-attachment:fixed;
+}
+
+/* === ANIMATED BACKGROUND === */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 80%,rgba(0,212,255,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%,rgba(34,197,94,0.06) 0%,transparent 50%);
+}
+
+.wrap{max-width:1300px;margin:0 auto;position:relative;z-index:1;}
+
+/* === HEADER === */
+header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:30px;border-bottom:1px solid var(--border);padding-bottom:20px;
+  flex-wrap:wrap;gap:16px;
+}
+.brand{display:flex;align-items:center;gap:14px;}
+.logo{
+  width:48px;height:48px;border-radius:12px;
+  background:linear-gradient(135deg,#22c55e,#3b9eff);
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+  box-shadow:0 0 24px rgba(34,197,94,0.4);
+}
+h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:1.6rem;font-weight:700;letter-spacing:0.02em;
+  background:linear-gradient(135deg,#fff,#22c55e,#3b9eff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.tagline{font-size:0.7rem;color:var(--dim);margin-top:2px;letter-spacing:0.15em;text-transform:uppercase;}
+.status{display:flex;gap:8px;align-items:center;font-size:0.75rem;color:var(--dim);
+  padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:rgba(0,40,80,0.3);}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);
+  animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.85);}}
+
+/* === MISSION BAR === */
+.mission{
+  background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(59,158,255,0.08));
+  border:1px solid rgba(34,197,94,0.2);border-radius:14px;
+  padding:16px 22px;margin-bottom:24px;
+  display:flex;gap:18px;align-items:center;
+}
+.mission-icon{font-size:2rem;flex-shrink:0;}
+.mission-text{flex:1;}
+.mission-title{font-size:0.85rem;font-weight:600;color:#fff;margin-bottom:4px;}
+.mission-sub{font-size:0.72rem;color:var(--dim);letter-spacing:0.05em;}
+
+/* === GRID === */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:24px;}
+
+/* === CARDS === */
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px;backdrop-filter:blur(12px);position:relative;overflow:hidden;
+  transition:all 0.3s ease;
+}
+.card:hover{border-color:rgba(74,158,255,0.4);transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,80,160,0.2);}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.5),transparent);
+}
+.label{font-size:0.65rem;letter-spacing:0.2em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:10px;font-weight:500;}
+.value{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:700;
+  color:#fff;line-height:1;letter-spacing:-0.02em;}
+.unit{font-size:1rem;color:var(--dim);margin-left:4px;font-weight:400;}
+.bar{height:5px;background:rgba(74,158,255,0.12);border-radius:3px;margin-top:14px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(0.25,1,0.5,1);
+  background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.bar-fill.green{background:linear-gradient(90deg,#22c55e,#86efac);}
+.bar-fill.amber{background:linear-gradient(90deg,#f59e0b,#fcd34d);}
+.bar-fill.red{background:linear-gradient(90deg,#ef4444,#fca5a5);}
+
+/* === ALERT BADGES === */
+.alert{margin-top:10px;padding:5px 10px;border-radius:6px;font-size:0.7rem;display:inline-block;
+  font-weight:500;letter-spacing:0.05em;}
+.alert.good{background:rgba(34,197,94,0.15);color:var(--good);}
+.alert.warn{background:rgba(245,158,11,0.15);color:var(--warn);}
+.alert.bad{background:rgba(239,68,68,0.15);color:var(--bad);}
+.alert.info{background:rgba(74,158,255,0.15);color:var(--accent);}
+
+/* === PUMP CARDS === */
+.pump-card{
+  grid-column:span 2;display:flex;align-items:center;gap:24px;
+}
+.pump-icon{font-size:2.8rem;flex-shrink:0;
+  filter:drop-shadow(0 0 12px rgba(74,158,255,0.4));}
+.pump-info{flex:1;}
+.pump-title{font-size:1rem;font-weight:600;margin-bottom:6px;color:#fff;}
+.pump-state{font-size:0.78rem;color:var(--dim);}
+.toggle{
+  width:60px;height:32px;background:#1a2a44;border-radius:16px;
+  position:relative;cursor:pointer;transition:background 0.3s;border:none;flex-shrink:0;
+}
+.toggle.on{background:var(--good);box-shadow:0 0 20px rgba(34,197,94,0.5);}
+.toggle::after{
+  content:'';position:absolute;width:24px;height:24px;border-radius:50%;
+  background:#fff;top:4px;left:4px;transition:left 0.3s;
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+.toggle.on::after{left:32px;}
+
+/* === AI WEATHER SECTION === */
+.ai-section{
+  background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(59,158,255,0.08));
+  border:1px solid rgba(139,92,246,0.25);border-radius:16px;padding:24px;
+  margin-bottom:24px;position:relative;overflow:hidden;
+}
+.ai-section::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#8b5cf6,#3b9eff,transparent);
+}
+.ai-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.ai-badge{
+  background:linear-gradient(135deg,#8b5cf6,#3b9eff);
+  color:#fff;font-size:0.65rem;font-weight:600;padding:4px 12px;
+  border-radius:20px;letter-spacing:0.15em;text-transform:uppercase;
+}
+.ai-title{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;}
+.ai-sub{font-size:0.78rem;color:var(--dim);margin-top:2px;}
+
+/* AI Recommendation */
+.recommendation{
+  background:rgba(139,92,246,0.1);border-left:3px solid #8b5cf6;
+  border-radius:8px;padding:16px 20px;margin-bottom:20px;
+}
+.rec-icon{font-size:1.5rem;display:inline-block;margin-right:10px;vertical-align:middle;}
+.rec-text{font-size:0.95rem;font-weight:600;color:#fff;display:inline-block;vertical-align:middle;}
+.rec-detail{font-size:0.78rem;color:var(--dim);margin-top:6px;line-height:1.5;}
+.rec-confidence{
+  display:inline-block;background:rgba(139,92,246,0.2);color:#c4b5fd;
+  font-size:0.65rem;padding:2px 8px;border-radius:4px;margin-left:8px;letter-spacing:0.05em;
+}
+
+/* 7-Day Forecast */
+.forecast{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+.day-card{
+  background:rgba(0,30,60,0.4);border:1px solid var(--border);border-radius:10px;
+  padding:12px 8px;text-align:center;transition:all 0.2s;
+}
+.day-card:hover{border-color:rgba(139,92,246,0.4);transform:translateY(-2px);}
+.day-name{font-size:0.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.day-icon{font-size:1.5rem;margin:6px 0;}
+.day-temp{font-size:0.95rem;font-weight:600;color:#fff;}
+.day-temp-low{font-size:0.7rem;color:var(--dim);margin-top:2px;}
+.day-rain{font-size:0.65rem;color:var(--rain);margin-top:4px;}
+.day-rain.zero{color:rgba(122,155,192,0.4);}
+
+@media(max-width:900px){
+  .forecast{grid-template-columns:repeat(4,1fr);}
+  .day-card:nth-child(n+5){display:none;}
+}
+@media(max-width:600px){
+  .pump-card{grid-column:span 1;}
+  .forecast{grid-template-columns:repeat(3,1fr);}
+  .day-card:nth-child(n+4){display:none;}
+}
+
+/* === HISTORY === */
+.history{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:22px;margin-top:24px;
+}
+.history h3{font-size:0.78rem;letter-spacing:0.15em;color:var(--dim);
+  text-transform:uppercase;margin-bottom:14px;font-weight:600;}
+.history-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+.history-table th,.history-table td{
+  text-align:left;padding:10px 12px;border-bottom:1px solid rgba(74,158,255,0.1);}
+.history-table th{color:var(--dim);font-weight:500;font-size:0.65rem;
+  text-transform:uppercase;letter-spacing:0.1em;}
+.history-table tr:hover td{background:rgba(74,158,255,0.04);}
+
+/* === FOOTER === */
+footer{
+  text-align:center;margin-top:40px;font-size:0.65rem;
+  color:rgba(122,155,192,0.5);letter-spacing:0.2em;text-transform:uppercase;
+  padding-top:24px;border-top:1px solid var(--border);
+}
+footer a{color:var(--accent);text-decoration:none;}
+footer a:hover{color:var(--accent2);}
+
+/* === LOCATION INPUT === */
+.loc-input{
+  background:transparent;border:1px solid var(--border);color:var(--text);
+  font-family:inherit;font-size:0.75rem;padding:6px 10px;border-radius:6px;
+  width:140px;margin-left:8px;
+}
+.loc-input:focus{outline:none;border-color:var(--accent);}
 </style>
 </head>
 <body>
 <div class="wrap">
+
+  <!-- HEADER -->
   <header>
-    <div>
-      <h1>🌱 SMART FARM DASHBOARD</h1>
-      <div class="sub">Real-time monitoring · Auto irrigation · Manual pest control</div>
+    <div class="brand">
+      <div class="logo">🌾</div>
+      <div>
+        <h1>SMART HARVEST</h1>
+        <div class="tagline">IoT · AI · Climate-Resilient School Gardens</div>
+      </div>
     </div>
     <div class="status"><div class="dot"></div><span id="last-update">Connecting...</span></div>
   </header>
 
+  <!-- MISSION BAR -->
+  <div class="mission">
+    <div class="mission-icon">🌍</div>
+    <div class="mission-text">
+      <div class="mission-title">Empowering schools and farmers with AI-powered, climate-resilient agriculture</div>
+      <div class="mission-sub">Real-time monitoring · Auto-irrigation · AI weather prediction · Hands-on STEM learning</div>
+    </div>
+  </div>
+
+  <!-- AI WEATHER PREDICTION SECTION -->
+  <div class="ai-section">
+    <div class="ai-header">
+      <span class="ai-badge">🤖 AI POWERED</span>
+      <div>
+        <div class="ai-title">Smart Weather & Irrigation Intelligence</div>
+        <div class="ai-sub">7-day forecast + soil data → smarter irrigation decisions for your farm</div>
+      </div>
+    </div>
+
+    <!-- AI Recommendation -->
+    <div class="recommendation" id="ai-recommendation">
+      <div>
+        <span class="rec-icon" id="rec-icon">🤖</span>
+        <span class="rec-text" id="rec-text">Analyzing weather and soil data...</span>
+        <span class="rec-confidence" id="rec-conf">AI</span>
+      </div>
+      <div class="rec-detail" id="rec-detail">Connecting to weather forecast service...</div>
+    </div>
+
+    <!-- 7-Day Forecast -->
+    <div class="forecast" id="forecast">
+      <!-- Days populated by JS -->
+    </div>
+  </div>
+
+  <!-- LIVE SENSOR DATA -->
   <div class="grid">
     <div class="card">
       <div class="label">🌡 Temperature</div>
       <div class="value" id="temp">--<span class="unit">°C</span></div>
       <div class="bar"><div class="bar-fill" id="temp-bar" style="width:0%"></div></div>
+      <div class="alert" id="temp-alert">--</div>
     </div>
     <div class="card">
       <div class="label">💧 Humidity</div>
       <div class="value" id="hum">--<span class="unit">%</span></div>
       <div class="bar"><div class="bar-fill" id="hum-bar" style="width:0%"></div></div>
+      <div class="alert" id="hum-alert">--</div>
     </div>
     <div class="card">
       <div class="label">🧪 pH Level</div>
       <div class="value" id="ph">--</div>
+      <div class="bar"><div class="bar-fill green" id="ph-bar" style="width:0%"></div></div>
       <div class="alert good" id="ph-alert">Optimal range</div>
     </div>
     <div class="card">
       <div class="label">🌾 Soil Moisture</div>
       <div class="value" id="soil">--<span class="unit">%</span></div>
+      <div class="bar"><div class="bar-fill" id="soil-bar" style="width:0%"></div></div>
       <div class="alert" id="soil-alert">--</div>
     </div>
 
+    <!-- IRRIGATION PUMP -->
     <div class="card pump-card">
       <div class="pump-icon">💦</div>
       <div class="pump-info">
         <div class="pump-title">Irrigation Pump (Auto)</div>
-        <div class="pump-state" id="irr-state">Activates when soil dry</div>
+        <div class="pump-state" id="irr-state">Activates when soil dry &amp; no rain expected</div>
       </div>
       <div class="alert" id="irr-badge">OFF</div>
     </div>
 
+    <!-- PESTICIDE PUMP -->
     <div class="card pump-card">
       <div class="pump-icon">🧴</div>
       <div class="pump-info">
         <div class="pump-title">Pesticide Pump (Manual)</div>
         <div class="pump-state" id="pst-state">Toggle to spray</div>
       </div>
-      <button class="toggle" id="pst-toggle" onclick="togglePesticide()"></button>
+      <button class="toggle" id="pst-toggle" onclick="togglePesticide()" aria-label="Toggle pesticide pump"></button>
     </div>
   </div>
 
+  <!-- HISTORY -->
   <div class="history">
-    <h3>📊 Recent Readings</h3>
-    <table>
-      <thead><tr><th>Time</th><th>Temp</th><th>Humidity</th><th>pH</th><th>Soil</th><th>Pumps</th></tr></thead>
-      <tbody id="history-body"></tbody>
+    <h3>📊 Recent Sensor Readings</h3>
+    <table class="history-table">
+      <thead>
+        <tr><th>Time</th><th>Temp</th><th>Humidity</th><th>pH</th><th>Soil</th><th>Status</th></tr>
+      </thead>
+      <tbody id="history-body">
+        <tr><td colspan="6" style="text-align:center;color:var(--dim);padding:30px;">Waiting for sensor data...</td></tr>
+      </tbody>
     </table>
   </div>
+
+  <footer>
+    SMART HARVEST · Open-Source IoT for School Gardens · Made with 💚 for Sub-Saharan Africa
+    <br>
+    <a href="https://github.com/YOUR-USERNAME/smart-harvest" style="margin-top:8px;display:inline-block;">View on GitHub</a>
+  </footer>
+
 </div>
 
 <script>
-// ⚠ CHANGE THIS to your deployed Render URL after Step 5
+// ============================================================
+// CONFIG — Update these with your deployed URLs
+// ============================================================
 const API_BASE = 'https://farm-backend-lyax.onrender.com';
 const DEVICE_ID = 'farm-node-001';
 
-let pesticideOn = false;
+// School/farm GPS coordinates (Kigali, Rwanda by default)
+// Find yours at https://www.latlong.net
+const FARM_LAT = -1.9441;
+const FARM_LON = 30.0619;
 
-async function fetchData() {
+// ============================================================
+// STATE
+// ============================================================
+let pesticideOn = false;
+let weatherData = null;
+let lastSensorReading = null;
+
+// ============================================================
+// SENSOR DATA FETCH (from your backend)
+// ============================================================
+async function fetchSensorData() {
   try {
     const res = await fetch(`${API_BASE}/api/iot/readings?deviceId=${DEVICE_ID}`);
     const data = await res.json();
@@ -122,66 +361,243 @@ async function fetchData() {
       return;
     }
     const r = data.latest;
+    lastSensorReading = r;
 
+    // Temperature
     document.getElementById('temp').innerHTML = r.temperature.toFixed(1) + '<span class="unit">°C</span>';
     document.getElementById('temp-bar').style.width = Math.min(r.temperature * 2, 100) + '%';
+    const tAlert = document.getElementById('temp-alert');
+    if (r.temperature > 32) { tAlert.className = 'alert bad'; tAlert.textContent = 'Heat stress'; }
+    else if (r.temperature < 12) { tAlert.className = 'alert info'; tAlert.textContent = 'Cold'; }
+    else { tAlert.className = 'alert good'; tAlert.textContent = 'Optimal'; }
+
+    // Humidity
     document.getElementById('hum').innerHTML = r.humidity.toFixed(0) + '<span class="unit">%</span>';
     document.getElementById('hum-bar').style.width = r.humidity + '%';
+    const hAlert = document.getElementById('hum-alert');
+    if (r.humidity > 85) { hAlert.className = 'alert warn'; hAlert.textContent = 'Fungal risk'; }
+    else if (r.humidity < 30) { hAlert.className = 'alert warn'; hAlert.textContent = 'Very dry'; }
+    else { hAlert.className = 'alert good'; hAlert.textContent = 'Comfortable'; }
 
+    // pH
     document.getElementById('ph').textContent = r.pH.toFixed(2);
+    document.getElementById('ph-bar').style.width = (r.pH / 14 * 100) + '%';
     const phAlert = document.getElementById('ph-alert');
     if (r.pH < 5.5) { phAlert.className = 'alert bad'; phAlert.textContent = 'Too acidic'; }
     else if (r.pH > 7.5) { phAlert.className = 'alert warn'; phAlert.textContent = 'Too alkaline'; }
     else { phAlert.className = 'alert good'; phAlert.textContent = 'Optimal range'; }
 
+    // Soil moisture
     document.getElementById('soil').innerHTML = r.soilMoisture + '<span class="unit">%</span>';
-    const soilAlert = document.getElementById('soil-alert');
-    if (r.soilMoisture < 40) { soilAlert.className = 'alert bad'; soilAlert.textContent = '⚠ DRY — Needs water'; }
-    else { soilAlert.className = 'alert good'; soilAlert.textContent = '✓ Adequately moist'; }
+    document.getElementById('soil-bar').style.width = r.soilMoisture + '%';
+    const sBar = document.getElementById('soil-bar');
+    sBar.className = 'bar-fill ' + (r.soilMoisture < 40 ? 'red' : r.soilMoisture < 60 ? 'amber' : 'green');
+    const sAlert = document.getElementById('soil-alert');
+    if (r.soilMoisture < 40) { sAlert.className = 'alert bad'; sAlert.textContent = '⚠ DRY — Needs water'; }
+    else if (r.soilMoisture < 60) { sAlert.className = 'alert warn'; sAlert.textContent = 'Moderate'; }
+    else { sAlert.className = 'alert good'; sAlert.textContent = '✓ Adequately moist'; }
 
+    // Irrigation pump
     const irrBadge = document.getElementById('irr-badge');
     irrBadge.textContent = r.irrigationActive ? '● ACTIVE' : 'OFF';
     irrBadge.className = 'alert ' + (r.irrigationActive ? 'good' : '');
 
+    // Pesticide pump
     pesticideOn = r.pesticideActive;
     document.getElementById('pst-toggle').className = pesticideOn ? 'toggle on' : 'toggle';
     document.getElementById('pst-state').textContent = pesticideOn ? 'Currently spraying' : 'Toggle to spray';
 
-    document.getElementById('last-update').textContent = 'Updated ' + new Date(r.receivedAt).toLocaleTimeString();
+    document.getElementById('last-update').textContent = 'Updated ' + new Date(r.receivedAt || Date.now()).toLocaleTimeString();
 
     // History table
     const tbody = document.getElementById('history-body');
     tbody.innerHTML = '';
     data.readings.slice(-8).reverse().forEach(x => {
-      const time = new Date(x.receivedAt).toLocaleTimeString();
+      const time = new Date(x.receivedAt || Date.now()).toLocaleTimeString();
+      const status = (x.irrigationActive ? '💧' : '') + (x.pesticideActive ? ' 🧴' : '') || '—';
       tbody.innerHTML += `<tr>
         <td>${time}</td>
         <td>${x.temperature.toFixed(1)}°C</td>
         <td>${x.humidity.toFixed(0)}%</td>
         <td>${x.pH.toFixed(2)}</td>
         <td>${x.soilMoisture}%</td>
-        <td>${x.irrigationActive?'💧':''}${x.pesticideActive?'🧴':''}</td>
+        <td>${status}</td>
       </tr>`;
     });
+
+    // Re-evaluate AI recommendation when new sensor data arrives
+    updateAIRecommendation();
   } catch (e) {
+    console.error('Sensor fetch error:', e);
     document.getElementById('last-update').textContent = '⚠ Connection error';
   }
 }
 
+// ============================================================
+// AI WEATHER PREDICTION (Open-Meteo — free, no API key)
+// ============================================================
+const weatherIcons = {
+  0:'☀️', 1:'🌤️', 2:'⛅', 3:'☁️',
+  45:'🌫️', 48:'🌫️',
+  51:'🌦️', 53:'🌦️', 55:'🌦️',
+  61:'🌧️', 63:'🌧️', 65:'🌧️',
+  71:'🌨️', 73:'🌨️', 75:'🌨️',
+  80:'🌦️', 81:'🌧️', 82:'⛈️',
+  95:'⛈️', 96:'⛈️', 99:'⛈️'
+};
+const weatherLabels = {
+  0:'Clear', 1:'Mainly clear', 2:'Partly cloudy', 3:'Overcast',
+  45:'Foggy', 48:'Foggy',
+  51:'Light drizzle', 53:'Drizzle', 55:'Heavy drizzle',
+  61:'Light rain', 63:'Rain', 65:'Heavy rain',
+  71:'Light snow', 73:'Snow', 75:'Heavy snow',
+  80:'Showers', 81:'Heavy showers', 82:'Violent showers',
+  95:'Thunderstorm', 96:'Thunder + hail', 99:'Severe thunder'
+};
+
+async function fetchWeather() {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${FARM_LAT}&longitude=${FARM_LON}` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max` +
+      `&hourly=precipitation,temperature_2m&timezone=auto&forecast_days=7`;
+    const res = await fetch(url);
+    weatherData = await res.json();
+    renderForecast();
+    updateAIRecommendation();
+  } catch (e) {
+    console.error('Weather fetch error:', e);
+    document.getElementById('forecast').innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;color:var(--dim);padding:20px;">⚠ Weather service unavailable</div>';
+  }
+}
+
+function renderForecast() {
+  if (!weatherData || !weatherData.daily) return;
+  const d = weatherData.daily;
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = new Date();
+  let html = '';
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    const dayLabel = i === 0 ? 'Today' : dayNames[date.getDay()];
+    const code = d.weather_code[i];
+    const icon = weatherIcons[code] || '🌍';
+    const max = Math.round(d.temperature_2m_max[i]);
+    const min = Math.round(d.temperature_2m_min[i]);
+    const rain = d.precipitation_sum[i].toFixed(1);
+    const rainProb = d.precipitation_probability_max[i] || 0;
+
+    html += `<div class="day-card">
+      <div class="day-name">${dayLabel}</div>
+      <div class="day-icon">${icon}</div>
+      <div class="day-temp">${max}°</div>
+      <div class="day-temp-low">${min}°</div>
+      <div class="day-rain ${rain == 0 ? 'zero' : ''}">💧 ${rain}mm</div>
+    </div>`;
+  }
+  document.getElementById('forecast').innerHTML = html;
+}
+
+// ============================================================
+// AI DECISION ENGINE — combines sensor data + weather forecast
+// ============================================================
+function updateAIRecommendation() {
+  if (!weatherData || !lastSensorReading) return;
+
+  const r = lastSensorReading;
+  const d = weatherData.daily;
+  const h = weatherData.hourly;
+
+  // Calculate rain expected in next 24h
+  let rainNext24h = 0;
+  let rainNext6h = 0;
+  if (h && h.precipitation) {
+    for (let i = 0; i < Math.min(24, h.precipitation.length); i++) {
+      rainNext24h += h.precipitation[i];
+      if (i < 6) rainNext6h += h.precipitation[i];
+    }
+  }
+
+  // Calculate avg max temp next 3 days
+  const avgMaxTemp = (d.temperature_2m_max[0] + d.temperature_2m_max[1] + d.temperature_2m_max[2]) / 3;
+
+  // ===== AI DECISION TREE =====
+  let icon = '🌱';
+  let text = 'Conditions optimal';
+  let detail = 'Soil moisture and weather conditions are within normal parameters.';
+  let confidence = 0.85;
+
+  if (r.soilMoisture < 40 && rainNext6h >= 5) {
+    icon = '⏸️';
+    text = 'HOLD irrigation — rain coming soon';
+    detail = `Soil is dry, but ${rainNext6h.toFixed(1)}mm of rain expected in the next 6 hours. Save water and let nature do the work!`;
+    confidence = 0.92;
+  } else if (r.soilMoisture < 40 && rainNext24h < 2) {
+    icon = '💧';
+    text = 'IRRIGATE NOW — soil dry, no rain expected';
+    detail = `Soil moisture critically low (${r.soilMoisture}%). Only ${rainNext24h.toFixed(1)}mm of rain forecast in next 24 hours. Auto-irrigation will activate.`;
+    confidence = 0.94;
+  } else if (avgMaxTemp > 32) {
+    icon = '🌡️';
+    text = 'HEATWAVE WARNING — protect crops';
+    detail = `Average max temperature for next 3 days is ${avgMaxTemp.toFixed(1)}°C. Consider extra mulching, shade cloth, and morning irrigation to prevent heat stress.`;
+    confidence = 0.88;
+  } else if (r.humidity > 80 && r.temperature > 22 && avgMaxTemp > 24) {
+    icon = '🦠';
+    text = 'FUNGAL DISEASE RISK';
+    detail = `Sustained high humidity (${r.humidity.toFixed(0)}%) with warm temperatures creates ideal conditions for fungal growth. Inspect crops and consider preventive treatment.`;
+    confidence = 0.78;
+  } else if (rainNext24h > 30) {
+    icon = '⛈️';
+    text = 'HEAVY RAIN INCOMING — prepare drainage';
+    detail = `${rainNext24h.toFixed(1)}mm of rain expected in next 24 hours. Check drainage, secure delicate plants, and avoid pesticide application today.`;
+    confidence = 0.91;
+  } else if (r.soilMoisture > 80) {
+    icon = '💦';
+    text = 'Soil saturated — let it dry';
+    detail = `Soil moisture is high (${r.soilMoisture}%). No irrigation needed. Risk of root rot if waterlogged for too long — ensure good drainage.`;
+    confidence = 0.82;
+  } else {
+    icon = '✅';
+    text = 'All conditions good';
+    detail = `Soil moisture ${r.soilMoisture}%, temperature ${r.temperature.toFixed(1)}°C, ${rainNext24h.toFixed(1)}mm rain expected next 24h. Monitoring continues.`;
+    confidence = 0.86;
+  }
+
+  document.getElementById('rec-icon').textContent = icon;
+  document.getElementById('rec-text').textContent = text;
+  document.getElementById('rec-detail').textContent = detail;
+  document.getElementById('rec-conf').textContent = (confidence * 100).toFixed(0) + '% CONFIDENCE';
+}
+
+// ============================================================
+// PESTICIDE PUMP CONTROL
+// ============================================================
 async function togglePesticide() {
   pesticideOn = !pesticideOn;
   document.getElementById('pst-toggle').className = pesticideOn ? 'toggle on' : 'toggle';
+  document.getElementById('pst-state').textContent = pesticideOn ? 'Currently spraying' : 'Toggle to spray';
   try {
     await fetch(`${API_BASE}/api/iot/pump-control`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ deviceId: DEVICE_ID, pesticidePump: pesticideOn })
     });
-  } catch (e) { alert('Failed to send command'); }
+  } catch (e) {
+    alert('Failed to send command. Check API connection.');
+    pesticideOn = !pesticideOn;
+    document.getElementById('pst-toggle').className = pesticideOn ? 'toggle on' : 'toggle';
+  }
 }
 
-fetchData();
-setInterval(fetchData, 5000);
+// ============================================================
+// INIT
+// ============================================================
+fetchSensorData();
+fetchWeather();
+setInterval(fetchSensorData, 5000);
+setInterval(fetchWeather, 30 * 60 * 1000);  // refresh weather every 30 min
 </script>
 </body>
 </html>
