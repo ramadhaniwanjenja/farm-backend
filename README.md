@@ -198,9 +198,7 @@ For schools without grid electricity:
 
 ## 📸 Demo & Screenshots
 
-> 🎥 **Watch the full demo video here:** [LINK_TO_VIDEO]
->
-> *Replace this link with your YouTube/Drive video URL once uploaded.*
+> 🎥 **Watch the full demo video here:** [(https://youtu.be/z-pkNQOWAu4)]
 
 ### 📷 Photo Gallery
 
