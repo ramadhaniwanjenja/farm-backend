@@ -215,7 +215,6 @@ For schools without grid electricity:
 </tr>
 </table>
 
-> 📁 **Upload your photos to:** `docs/images/` in the repository, then replace the placeholder paths above.
 
 ---
 
@@ -410,8 +409,7 @@ GET /api/ai/recommendation?deviceId=farm-node-001
 |---|---|
 | 🥉 **$2,500** | Deploy in 5 pilot schools + teacher training in Rwanda |
 | 🥈 **$10,000** | Expand to 15 schools, full curriculum dev, 6-month impact study |
-| 🥇 **$50,000** | 50 schools, local manufacturing partnership, mobile app |
-| 💎 **$200,000+** | Pan-African scale-up, government partnerships, advanced ML R&D |
+| 🥇 **$57,500** | 50 schools, local manufacturing partnership, mobile app |
 
 ### Why Smart Harvest Deserves Funding
 
@@ -422,15 +420,6 @@ GET /api/ai/recommendation?deviceId=farm-node-001
 5. ✅ **Aligned with global priorities** — directly advances 4 UN SDGs.
 6. ✅ **Scales economically** — at $45/unit, even modest funding reaches hundreds of schools.
 
-### 📩 Get In Touch
-
-**Email:** YOUR.EMAIL@example.com
-**LinkedIn:** [Your LinkedIn]
-**Project Lead:** [Your Name]
-**Organization:** [Your Organization / School]
-**Location:** Rwanda 🇷🇼
-
-> 📄 **Full project proposal available on request.** We are open to grants, partnerships, sponsorships, equipment donations, and collaborations with NGOs, universities, and corporations.
 
 ---
 
