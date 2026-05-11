@@ -15,7 +15,7 @@
 
 ---
 
-### 🎬 [Watch the Demo Video](https://YOUR-VIDEO-LINK-HERE) &nbsp;·&nbsp; 🌐 [Live Dashboard](https://YOUR-DASHBOARD-URL) &nbsp;·&nbsp; 📊 [Live API](https://YOUR-API-URL)
+### 🎬 [Watch the Demo Video](https://youtu.be/z-pkNQOWAu4) &nbsp;·&nbsp; 🌐 [Live Dashboard](https://farm-backend-liard.vercel.app/) &nbsp;·&nbsp; 📊 [Live API](https://farm-backend-lyax.onrender.com/api/iot/readings)
 
 </div>
 
@@ -206,12 +206,12 @@ For schools without grid electricity:
 
 <table>
 <tr>
-<td align="center"><b>Hardware Build</b><br><img src="docs/images/hardware-build.jpg" width="280" alt="Add photo of ESP8266 + sensors wired up"/><br><i>The complete sensor & pump assembly</i></td>
-<td align="center"><b>Field Deployment</b><br><img src="docs/images/field-deployment.jpg" width="280" alt="Add photo of system in school garden"/><br><i>Prototype installed in test garden</i></td>
+<td align="center"><b>Hardware Build</b><br><img src="/SmartHavest_demo.png" width="280" alt="Add photo of ESP8266 + sensors wired up"/><br><i>The complete sensor & pump assembly</i></td>
+<td align="center"><b>Field Deployment</b><br><img src="/Msarthavest_onsite.png" width="280" alt="Add photo of system in school garden"/><br><i>Prototype installed in test garden</i></td>
 </tr>
 <tr>
-<td align="center"><b>Live Dashboard</b><br><img src="docs/images/dashboard-screenshot.png" width="280" alt="Add screenshot of dashboard"/><br><i>Real-time sensor data + AI forecast</i></td>
-<td align="center"><b>Student Engagement</b><br><img src="docs/images/students.jpg" width="280" alt="Add photo of students using system"/><br><i>Students learning IoT concepts hands-on</i></td>
+<td align="center"><b>Live Dashboard</b><br><img src="/SmartHarvest_dashboard.png" width="280" alt="Add screenshot of dashboard"/><br><i>Real-time sensor data + AI forecast</i></td>
+<td align="center"><b>Student Engagement</b><br><img src="/SmartHavest_demo.png" width="280" alt="Add photo of students using system"/><br><i>Students learning IoT concepts hands-on</i></td>
 </tr>
 </table>
 
