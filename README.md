@@ -150,7 +150,7 @@ This is what makes SMART HARVEST genuinely **smart**. We integrate live weather 
 
 ---
 
-## 🛠️ Hardware & Materials (Bill of Materials)
+## 🛠️ Hardware & Materials (Bill of MvP Materials)
 
 > 💰 **Total cost per unit: ≈ $35–$45 USD** *(depending on local sourcing)*
 
