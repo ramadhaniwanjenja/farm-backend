@@ -211,7 +211,7 @@ For schools without grid electricity:
 </tr>
 <tr>
 <td align="center"><b>Live Dashboard</b><br><img src="/SmartHarvest_dashboard.png" width="280" alt="Add screenshot of dashboard"/><br><i>Real-time sensor data + AI forecast</i></td>
-<td align="center"><b>Student Engagement</b><br><img src="/SmartHavest_demo.png" width="280" alt="Add photo of students using system"/><br><i>Students learning IoT concepts hands-on</i></td>
+<td align="center"><b>EMF team</b><br><img src="/ERM_team.jpg.jpeg" width="280" alt="Add photo of students using system"/><br><i>EMF team on the site</i></td>
 </tr>
 </table>
 
@@ -438,12 +438,11 @@ GET /api/ai/recommendation?deviceId=farm-node-001
 
 | Role | Name | Contact |
 |---|---|---|
-| Project Lead / Hardware Engineer | [Your Name] | [email] |
-| Backend Developer | [Name] | [email] |
-| Frontend Developer | [Name] | [email] |
-| Agricultural Advisor | [Name] | [email] |
-| Education Specialist | [Name] | [email] |
-
+| Founder and Executive Director  | Nnakubulwa Hamidah  | nnakuburwahamidah@gmail.com  |
+| Program Manager | Ramadhani Shafii Wanjenja | ramadhanishafiiwanjenja@gmail.com |
+| M&E and IT officer | NDATIMANA Emmuel | ndatimana@emf2foundation.org |
+| Communication Officer | MWESIGWA Eric | mwesigwaeric57@gmail.com |
+| Field Coordinator | UWERA Irene | uwerairene2016@gmail.com |
 ---
 
 ## 🤝 Contributing
