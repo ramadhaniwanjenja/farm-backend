@@ -471,5 +471,4 @@ We *strongly encourage* schools, NGOs, and developers in low-resource regions to
 **SMART HARVEST** — *Building a climate-resilient future, one school garden at a time.* 🌱
 
 [⬆ Back to top](#-smart-harvest)
-
 </div>
